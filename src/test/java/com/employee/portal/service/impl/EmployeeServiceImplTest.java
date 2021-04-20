@@ -11,9 +11,8 @@ import org.mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,7 +28,7 @@ public class EmployeeServiceImplTest {
     EmployeeRepository employeeRepository;
 
     @Test
-    public void createEmployeeTest(){
+    public void createEmployeeTest() {
         EmployeeEntity employee = EmployeeEntity.builder()
                 .dob(LocalDate.now().minusYears(20)).department("IT")
                 .firstName("John").lastName("Doe").gender("Male").build();
@@ -40,15 +39,18 @@ public class EmployeeServiceImplTest {
     }
 
     @Test
-    public void getEmployeesTest(){
-        List<EmployeeEntity> employees = Collections.singletonList(EmployeeEntity.builder()
-                .dob(LocalDate.now().minusYears(20)).department("IT")
-                .firstName("Jane").lastName("Doe").gender("Female").build());
-        when(employeeRepository.findAllByOrderByFirstName()).thenReturn(employees.stream());
+    public void getEmployeesTest() {
+        List<EmployeeEntity> employees = Arrays.asList(
+                EmployeeEntity.builder().dob(LocalDate.now().minusYears(20)).department("IT")
+                        .firstName("Shane").lastName("Doe").gender("Female").build(),
+                EmployeeEntity.builder().dob(LocalDate.now().minusYears(20)).department("IT")
+                        .firstName("jane").lastName("Doe").gender("Female").build()
+        );
+        when(employeeRepository.findAll()).thenReturn(employees);
 
         List<EmployeeDTO> response = employeeService.getEmployees();
         assertEquals(employees.size(), response.size());
-        assertEquals(employees.get(0).getFirstName(), response.get(0).getFirstName());
+        assertEquals("jane", response.get(0).getFirstName());
     }
 
 }

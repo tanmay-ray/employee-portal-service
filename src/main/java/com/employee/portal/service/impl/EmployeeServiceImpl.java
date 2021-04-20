@@ -27,7 +27,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public List<EmployeeDTO> getEmployees() {
-        return employeeRepository.findAllByOrderByFirstName()
-                .map(EmployeeUtil::entityToDTO).collect(Collectors.toList());
+        return employeeRepository.findAll().stream()
+                .map(EmployeeUtil::entityToDTO)
+                .sorted((e1, e2) -> e1.getFirstName().compareToIgnoreCase(e2.getFirstName()))
+                .collect(Collectors.toList());
     }
 }
